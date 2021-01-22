@@ -12,6 +12,7 @@ from RiverIO import RiverIO
 from FlowLawCalibration import FlowLawCalibration
 from Domain import Domain
 
+# IO=RiverIO('MetroManTxt',obsFname='PepsiSac/SWOTobs.txt',truthFname='PepsiSac/truth.txt')
 IO=RiverIO('MetroManTxt',obsFname='ArcticDEMSag/SWOTobs.txt',truthFname='ArcticDEMSag/truth.txt')
 D=Domain(IO.ObsData)
 

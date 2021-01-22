@@ -17,6 +17,10 @@ class FlowLawCalibration:
         
         self.CalibrateReaches()
         
+    def ManningVariant1(self,params,dA,W,S):
+        Q=1/params[0]*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
+        return Q
+
     def CalibrateReaches(self):     
         
         self.param_est=zeros( (self.D.nR,2) )
@@ -41,16 +45,14 @@ class FlowLawCalibration:
             
             self.param_est[r,:]=res.x
             self.success[r]=res.success
-            self.Qhat[r]=1/self.param_est[r,0]*(self.param_est[r,1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
+            self.Qhat[r]=self.ManningVariant1(self.param_est[r,:],dA,W,S)
             
-            self.CalcErrorStats(Q, self.Qhat[r]) #super sloppy
-        
-    # def ManningVariant1(self,params,dA,W,S):
-    #     Q=1/params[1]*(params[2]+dA)**(5/3)*W**(-2/3)**S**(1/2)
-    #     return Q
+            self.CalcErrorStats(Q, self.Qhat[r]) #super sloppy        
+
     
     def ObjectiveFunc(self,params,dA,W,S,Q):      
-        Qhat=1/params[0]*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
+        # Qhat=1/params[0]*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
+        Qhat=self.ManningVariant1(params,dA,W,S)
         y=sum((Qhat-Q)**2)
         return y
 
