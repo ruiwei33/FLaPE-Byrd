@@ -15,7 +15,6 @@ class FlowLawCalibration:
         self.Obs=Obs
         self.Truth=Truth
         
-        self.CalibrateReaches()
         
     def ManningVariant1(self,params,dA,W,S):
         Q=1/params[0]*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
@@ -50,7 +49,7 @@ class FlowLawCalibration:
             
             self.param_est[r,:]=res.x
             self.success[r]=res.success
-            self.Qhat[r]=self.ManningVariant1(self.param_est[r,:],dA,W,S)
+            self.Qhat[r,:]=self.ManningVariant1(self.param_est[r,:],dA,W,S)
             
             self.CalcErrorStats(Q, self.Qhat[r]) #super sloppy        
 
