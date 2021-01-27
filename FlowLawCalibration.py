@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Thu Jan 21 04:49:20 2021
 
+# -*- coding: utf-8 -*-
 @author: mtd
 """
 
 from scipy import optimize
 from numpy import inf,zeros,mean,sqrt,log,std
+from ErrorStats import ErrorStats
 
 class FlowLawCalibration:
     def __init__(self,D,Obs,Truth):
         self.D=D
         self.Obs=Obs
         self.Truth=Truth
+        self.Performance={}
         
         
     def ManningVariant1(self,params,dA,W,S):
@@ -51,7 +53,9 @@ class FlowLawCalibration:
             self.success[r]=res.success
             self.Qhat[r,:]=self.ManningVariant1(self.param_est[r,:],dA,W,S)
             
-            self.CalcErrorStats(Q, self.Qhat[r]) #super sloppy        
+            # self.CalcErrorStats(Q, self.Qhat[r]) #super sloppy        
+            self.Performance[r]=ErrorStats(Q,self.Qhat[r,:])
+            self.Performance[r].CalcErrorStats()
 
     
     def ObjectiveFunc(self,params,dA,W,S,Q):      
@@ -60,31 +64,5 @@ class FlowLawCalibration:
         y=sum((Qhat-Q)**2)
         return y
 
-    def CalcErrorStats(self,Qt,Qhat):
-        
-        QhatAvg=mean(Qhat,axis=0)
-        
-        self.ErrorStats={}    
-        
-        self.ErrorStats["RMSE"]=sqrt(mean( (Qt-QhatAvg)**2 ) )
-        self.ErrorStats["rRMSE"]=sqrt(mean( (  (Qt-QhatAvg)/Qt   )**2 ) )
-        self.ErrorStats["nRMSE"]=self.ErrorStats["RMSE"]/mean(Qt)
-          
-        r=QhatAvg-Qt
-        logr=log(QhatAvg)-log(Qt)
-    
-        self.ErrorStats["NSE"]=1-sum(r**2)/sum( (Qt-mean(Qt))**2 )
-        self.ErrorStats["VE"]=1- sum(abs(r))/sum(Qt)
-    
-        self.ErrorStats["bias"]=mean(r)
-        self.ErrorStats["stdresid"]=std(r)
-        self.ErrorStats["nbias"] = self.ErrorStats["bias"]/mean(Qt)
-    
-        self.ErrorStats["MSC"]=log(  sum((Qt-mean(Qt))**2)/sum(r**2) -2*2 / self.D.nt  )
-        self.ErrorStats["meanLogRes"]=mean(logr)
-        self.ErrorStats["stdLogRes"]=std(logr)
-        self.ErrorStats["meanRelRes"]=mean(r/Qt)
-        self.ErrorStats["stdRelRes"]=std(r/Qt)
-    
-        self.ErrorStats["Qbart"]=mean(Qt)  
+
         
