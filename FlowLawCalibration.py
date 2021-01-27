@@ -20,6 +20,11 @@ class FlowLawCalibration:
     def ManningVariant1(self,params,dA,W,S):
         Q=1/params[0]*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
         return Q
+    
+    def ManningVariant2(self,params,dA,W,S):
+        n=params[0]*((params[1]+dA)/W)**params[2]
+        Q=n*(params[1]+dA)**(5/3)*W**(-2/3)*S**(1/2)
+        return Q    
 
     def CalibrateReaches(self):     
         
