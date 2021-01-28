@@ -23,7 +23,7 @@ D=Domain(IO.ObsData)
 Obs=ReachObservations(D,IO.ObsData)
 Truth=ReachTruth(IO.TruthData)
 
-Variants={'1','2'}
+Variants=[1, 2]
 
 cals={}
 
@@ -34,9 +34,9 @@ for r in range(0,D.nR):
     Qtrue=Truth.Q[r,:]
     
     FlowLawVariants=[]       
-    if '1' in Variants:     
+    if 1 in Variants:     
         FlowLawVariants.append(FlowLawVariant1(dA,W,S) )
-    if '2' in Variants:
+    if 2 in Variants:
         FlowLawVariants.append(FlowLawVariant2(dA,W,S) )
        
     cal={}
