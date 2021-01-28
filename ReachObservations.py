@@ -20,12 +20,7 @@ class ReachObservations:
         self.h0=RiverData["h0"]
         self.sigh=RiverData["sigh"]
         self.sigw=RiverData["sigw"]
-        self.sigS=RiverData["sigS"]
-        
-        # et al.
-        #self.GetVectorObs()            
-        
-        #self.CalcdA()
+        self.sigS=RiverData["sigS"]    
 
         #%% create resahepd versions of observations
         self.hv=reshape(self.h, (self.D.nR*self.D.nt,1) )
