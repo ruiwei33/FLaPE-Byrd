@@ -6,14 +6,15 @@ Created on Wed Jan 27 14:12:54 2021
 @author: mtd
 """
 
-from numpy import mean,sqrt
+from numpy import mean,sqrt,log,std
 
 class ErrorStats:
     
-    def __init__(self,Qt,Qhat):
+    def __init__(self,Qt,Qhat,D):
     
         self.Qt=Qt
         self.Qhat=Qhat
+        self.D=D
     
         self.RMSE=[];
 
@@ -23,26 +24,26 @@ class ErrorStats:
         
         self.RMSE=sqrt(mean( (self.Qt-QhatAvg)**2 ) )
         
-        # self.ErrorStats={}    
-        
-        # self.ErrorStats["RMSE"]=sqrt(mean( (Qt-QhatAvg)**2 ) )
-        # self.ErrorStats["rRMSE"]=sqrt(mean( (  (Qt-QhatAvg)/Qt   )**2 ) )
-        # self.ErrorStats["nRMSE"]=self.ErrorStats["RMSE"]/mean(Qt)
+        self.rRMSE=sqrt(mean( ((self.Qt-QhatAvg)/self.Qt)**2  ) )        
+        self.nRMSE=self.RMSE/mean(self.Qt)
           
-        # r=QhatAvg-Qt
-        # logr=log(QhatAvg)-log(Qt)
+        r=QhatAvg-self.Qt
+        logr=log(QhatAvg)-log(self.Qt)
+        
+        self.NSE=1.-sum(r**2)/sum(  (self.Qt-QhatAvg)**2  )        
+        
+        self.VE=1.-sum(abs(r))/sum(self.Qt)
+        
+        self.bias=mean(r)
+                        
+        self.stdresid=std(r)        
+        
+        self.nbias = self.bias/QhatAvg
     
-        # self.ErrorStats["NSE"]=1-sum(r**2)/sum( (Qt-mean(Qt))**2 )
-        # self.ErrorStats["VE"]=1- sum(abs(r))/sum(Qt)
+        self.MSC=log(  sum((self.Qt-QhatAvg)**2)/sum(r**2) -2*2 / self.D.nt  )
+        self.meanLogRes=mean(logr)
+        self.stdLogRes=std(logr)
+        self.meanRelRes=mean(r/self.Qt)
+        self.stdRelRes=std(r/self.Qt)
     
-        # self.ErrorStats["bias"]=mean(r)
-        # self.ErrorStats["stdresid"]=std(r)
-        # self.ErrorStats["nbias"] = self.ErrorStats["bias"]/mean(Qt)
-    
-        # self.ErrorStats["MSC"]=log(  sum((Qt-mean(Qt))**2)/sum(r**2) -2*2 / self.D.nt  )
-        # self.ErrorStats["meanLogRes"]=mean(logr)
-        # self.ErrorStats["stdLogRes"]=std(logr)
-        # self.ErrorStats["meanRelRes"]=mean(r/Qt)
-        # self.ErrorStats["stdRelRes"]=std(r/Qt)
-    
-        # self.ErrorStats["Qbart"]=mean(Qt)  
+        self.Qbart=mean(self.Qt)  
