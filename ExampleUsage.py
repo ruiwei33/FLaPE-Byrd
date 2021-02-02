@@ -38,13 +38,13 @@ for r in range(0,D.nR):
 for r in range(0,D.nR):    
     FlowLawVariants=[]       
     if 1 in Variants:     
-        FlowLawVariants.append(FlowLawVariant1(dA,W,S) )
+        FlowLawVariants.append(FlowLawVariant1(ReachData[r][0],ReachData[r][1],ReachData[r][2]) )
     if 2 in Variants:
-        FlowLawVariants.append(FlowLawVariant2(dA,W,S) )
+        FlowLawVariants.append(FlowLawVariant2(ReachData[r][0],ReachData[r][1],ReachData[r][2])  )
        
     cal={}
     for i in range(0,len(FlowLawVariants) ):
-        cal[i]=FlowLawCalibration(D,dA,W,S,Qtrue,FlowLawVariants[i])       
+        cal[i]=FlowLawCalibration(D,ReachData[r][0],ReachData[r][1],ReachData[r][2],ReachData[r][3],FlowLawVariants[i])       
         cal[i].CalibrateReach()
     
     cals[r]=cal
