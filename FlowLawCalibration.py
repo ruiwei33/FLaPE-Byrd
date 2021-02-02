@@ -13,11 +13,8 @@ from ErrorStats import ErrorStats
 import matplotlib.pyplot as plt
 
 class FlowLawCalibration:
-    def __init__(self,D,dA,W,S,Qtrue,FlowLaw):
+    def __init__(self,D,Qtrue,FlowLaw):
         self.D=D
-        self.dA=dA
-        self.W=W
-        self.S=S
         self.Qtrue=Qtrue
         self.FlowLaw=FlowLaw
         
@@ -38,7 +35,7 @@ class FlowLawCalibration:
             
         res = optimize.minimize(fun=self.ObjectiveFunc,
                                 x0=init_params,
-                                args=(self.dA,self.W,self.S,self.Qtrue),
+                                args=(self.Qtrue),
                                 bounds=param_bounds )
         
         self.param_est=res.x
@@ -49,7 +46,7 @@ class FlowLawCalibration:
         self.Performance.CalcErrorStats()
 
     
-    def ObjectiveFunc(self,params,dA,W,S,Q):      
+    def ObjectiveFunc(self,params,Q):      
         Qhat=self.FlowLaw.CalcQ(params)
         y=sum((Qhat-Q)**2)
         return y

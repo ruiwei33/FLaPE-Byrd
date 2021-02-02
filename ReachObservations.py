@@ -26,7 +26,7 @@ class ReachObservations:
         self.hv=reshape(self.h, (self.D.nR*self.D.nt,1) )
         self.Sv=reshape(self.S, (self.D.nR*self.D.nt,1) )
         self.wv=reshape(self.w, (self.D.nR*self.D.nt,1) )
-
+        
         DeltaAHat=empty( (self.D.nR,self.D.nt-1) )
         self.DeltaAHatv = self.calcDeltaAHatv(DeltaAHat)
         self.dA= concatenate(  (zeros( (self.D.nR,1) ), DeltaAHat @ triu(ones( (self.D.nt-1,self.D.nt-1) ),0)),1 )

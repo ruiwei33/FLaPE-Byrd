@@ -44,7 +44,7 @@ for r in range(0,D.nR):
        
     cal={}
     for i in range(0,len(FlowLawVariants) ):
-        cal[i]=FlowLawCalibration(D,ReachData[r][0],ReachData[r][1],ReachData[r][2],ReachData[r][3],FlowLawVariants[i])       
+        cal[i]=FlowLawCalibration(D,ReachData[r][3],FlowLawVariants[i])       
         cal[i].CalibrateReach()
     
     cals[r]=cal
