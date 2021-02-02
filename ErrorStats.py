@@ -22,13 +22,13 @@ class ErrorStats:
         
         QhatAvg=mean(self.Qhat,axis=0)
         
-        self.RMSE=sqrt(mean( (self.Qt-QhatAvg)**2 ) )
+        self.RMSE=sqrt(mean( (self.Qt-self.Qhat)**2 ) )
         
-        self.rRMSE=sqrt(mean( ((self.Qt-QhatAvg)/self.Qt)**2  ) )        
+        self.rRMSE=sqrt(mean( ((self.Qt-self.Qhat)/self.Qt)**2  ) )        
         self.nRMSE=self.RMSE/mean(self.Qt)
           
-        r=QhatAvg-self.Qt
-        logr=log(QhatAvg)-log(self.Qt)
+        r=self.Qhat-self.Qt
+        logr=log(self.Qhat)-log(self.Qt)
         
         self.NSE=1.-sum(r**2)/sum(  (self.Qt-QhatAvg)**2  )        
         
@@ -47,3 +47,7 @@ class ErrorStats:
         self.stdRelRes=std(r/self.Qt)
     
         self.Qbart=mean(self.Qt)  
+    
+    def ShowKeyErrorMetrics(self):
+        print('Normalized RMSE:', '%.2f'%self.nRMSE)
+        print('Normalized NSE:', '%.2f'%self.NSE)        

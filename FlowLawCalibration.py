@@ -7,9 +7,10 @@ Created on Thu Jan 21 04:49:20 2021
 """
 
 from scipy import optimize
-from numpy import inf,zeros,mean,sqrt,log,std
+from numpy import zeros
 from ErrorStats import ErrorStats
-# from FlowLaws import *
+
+import matplotlib.pyplot as plt
 
 class FlowLawCalibration:
     def __init__(self,D,dA,W,S,Qtrue,FlowLaw):
@@ -19,9 +20,13 @@ class FlowLawCalibration:
         self.S=S
         self.Qtrue=Qtrue
         self.FlowLaw=FlowLaw
+        
+        self.param_est=[]
+        self.success=[]
+        self.Qhat=[]
         self.Performance={}
 
-    def CalibrateReaches(self):     
+    def CalibrateReach(self):     
         
         # self.param_est=zeros( (self.D.nR,2) )
         self.success= zeros( 1, dtype=bool )
@@ -49,5 +54,28 @@ class FlowLawCalibration:
         y=sum((Qhat-Q)**2)
         return y
 
+
+    def PlotTimeseries(self):
+        fig,ax = plt.subplots()
+        ax.plot(self.D.t.T,self.Qtrue,label='true')
+        ax.plot(self.D.t.T,self.Qhat,label='estimate')        
+        plt.title('Discharge timeseries')
+        plt.xlabel('Time,days')
+        plt.ylabel('Discharge m^3/s')
+        plt.legend()        
+        plt.show()
+    def PlotScatterplot(self):
+        fig,ax = plt.subplots()
+        ax.scatter(self.Qtrue,self.Qhat,marker='o')        
+        y_lim = ax.get_ylim()
+        x_lim = ax.get_xlim()
+        onetoone=[0,0]
+        onetoone[0]=min(y_lim[0],x_lim[0])
+        onetoone[1]=max(y_lim[1],x_lim[1])
+        ax.plot([onetoone[0],onetoone[1]],[onetoone[0],onetoone[1]])
+        plt.title('Discharge scatterplot')
+        plt.xlabel('True Discharge m^3/s')
+        plt.ylabel('Estimated Discharge m^3/s')      
+        plt.show()   
 
         
