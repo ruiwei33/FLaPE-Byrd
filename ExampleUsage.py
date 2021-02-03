@@ -43,7 +43,7 @@ for r in range(0,D.nR):
     
     ReachData.append(ReachDict)
 
-cals={}
+cals=[] #make a list of results, indexed by reach #
 for r in range(0,D.nR):    
     FlowLawVariants={} #stash flow law variant objects for each reach in a dict       
     if 'Constant-n' in Variants:     
@@ -51,16 +51,16 @@ for r in range(0,D.nR):
         
     if 'PowerLaw-n' in Variants:
         FlowLawVariants['PowerLaw-n']=MWAPN(ReachData[r]['dA'],ReachData[r]['w'],ReachData[r]['S'])           
-       
-    cal=[]
+           
+    cal={} #make a dictionary of results, keyed off the flow law variant name
     for variant in FlowLawVariants.keys():               
         flow_law_cal=FlowLawCalibration(D,ReachData[r]['Qtrue'],FlowLawVariants[variant])
         flow_law_cal.CalibrateReach()
-        cal.append(flow_law_cal)        
+        cal[variant]=flow_law_cal
 
-    cals[r]=cal
+    cals.append(cal)
 
 # Output
-cals[0][0].PlotTimeseries()
-cals[0][0].PlotScatterplot()
-cals[0][0].Performance.ShowKeyErrorMetrics()
+cals[0]['Constant-n'].PlotTimeseries()
+cals[0]['Constant-n'].PlotScatterplot()
+cals[0]['Constant-n'].Performance.ShowKeyErrorMetrics()
