@@ -25,14 +25,6 @@ Truth=ReachTruth(IO.TruthData)
 # Calibration calculations
 Variants=['Constant-n', 'PowerLaw-n']
 
-# ReachData={} #stash reach data in a dictionary
-# for r in range(0,D.nR):
-#     dA=Obs.dA[r,:]
-#     W=Obs.w[r,:]
-#     S=Obs.S[r,:]
-#     Qtrue=Truth.Q[r,:]
-#     ReachData[r]=[dA,W,S,Qtrue]
-
 ReachData=[]
 for r in range(0,D.nR):
     ReachDict={}
