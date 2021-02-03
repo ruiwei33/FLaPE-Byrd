@@ -24,29 +24,40 @@ Truth=ReachTruth(IO.TruthData)
 
 # Calibration calculations
 Variants=['Constant-n', 'PowerLaw-n']
-ReachData={} #stash reach data in a dictionary
+
+# ReachData={} #stash reach data in a dictionary
+# for r in range(0,D.nR):
+#     dA=Obs.dA[r,:]
+#     W=Obs.w[r,:]
+#     S=Obs.S[r,:]
+#     Qtrue=Truth.Q[r,:]
+#     ReachData[r]=[dA,W,S,Qtrue]
+
+ReachData=[]
 for r in range(0,D.nR):
-    dA=Obs.dA[r,:]
-    W=Obs.w[r,:]
-    S=Obs.S[r,:]
-    Qtrue=Truth.Q[r,:]
-    ReachData[r]=[dA,W,S,Qtrue]
+    ReachDict={}
+    ReachDict['dA']=Obs.dA[r,:]
+    ReachDict['w']=Obs.w[r,:]
+    ReachDict['S']=Obs.S[r,:]
+    ReachDict['Qtrue']=Truth.Q[r,:]
+    
+    ReachData.append(ReachDict)
 
 cals={}
 for r in range(0,D.nR):    
     FlowLawVariants={} #stash flow law variant objects for each reach in a dict       
     if 'Constant-n' in Variants:     
-        FlowLawVariants['Constant-n']=MWACN(ReachData[r][0],ReachData[r][1],ReachData[r][2])
+        FlowLawVariants['Constant-n']=MWACN(ReachData[r]['dA'],ReachData[r]['w'],ReachData[r]['S'])        
         
     if 'PowerLaw-n' in Variants:
-        FlowLawVariants['PowerLaw-n']=MWAPN(ReachData[r][0],ReachData[r][1],ReachData[r][2])
+        FlowLawVariants['PowerLaw-n']=MWAPN(ReachData[r]['dA'],ReachData[r]['w'],ReachData[r]['S'])           
        
     cal=[]
     for variant in FlowLawVariants.keys():               
-        flow_law_cal=FlowLawCalibration(D,ReachData[r][3],FlowLawVariants[variant])
+        flow_law_cal=FlowLawCalibration(D,ReachData[r]['Qtrue'],FlowLawVariants[variant])
         flow_law_cal.CalibrateReach()
         cal.append(flow_law_cal)        
-    
+
     cals[r]=cal
 
 # Output
