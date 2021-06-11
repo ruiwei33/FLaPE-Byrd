@@ -5,13 +5,17 @@ Created on Wed Jan 13 23:49:40 2021
 @author: mtd
 """
 
-from numpy import reshape,concatenate,zeros,ones,triu,empty
+from numpy import reshape,concatenate,zeros,ones,triu,empty,arctan,tan,pi
+from scipy import stats
+import matplotlib.pyplot as plt
 
 class ReachObservations:    
         
-    def __init__(self,D,RiverData):
+    def __init__(self,D,RiverData,ConstrainHWSwitch=False):
         
-        self.D=D
+        self.D=D    
+        self.ConstrainHWSwitch=ConstrainHWSwitch
+        
         
         # assign data from input dictionary
         self.h=RiverData["h"]           
@@ -21,6 +25,10 @@ class ReachObservations:
         self.sigh=RiverData["sigh"]
         self.sigw=RiverData["sigw"]
         self.sigS=RiverData["sigS"]    
+        
+        # optionally constrain heights and widths to be self-consistent
+        if ConstrainHWSwitch:
+            self.ConstrainHW()
 
         #%% create resahepd versions of observations
         self.hv=reshape(self.h, (self.D.nR*self.D.nt,1) )
@@ -40,4 +48,30 @@ class ReachObservations:
          
         # changed how this part works compared with Matlab, avoiding translating calcU
         return reshape(DeltaAHat,(self.D.nR*(self.D.nt-1),1) )
+    
+    def ConstrainHW(self):
         
+        self.hobs=self.h[0,:]
+        self.wobs=self.w[0,:]
+        
+        self.fit = stats.linregress(self.hobs, self.wobs)
+        
+
+        mo=-tan(pi/2-arctan(self.fit.slope));
+        self.h[0,:]=(self.wobs-mo*self.hobs-self.fit.intercept)/(self.fit.slope-mo);
+        self.w[0,:]=self.fit.slope*self.h+self.fit.intercept;
+        
+        
+        
+    def plotHW(self):
+        fig,ax = plt.subplots()
+        
+        if self.ConstrainHWSwitch:
+            ax.scatter(self.hobs,self.wobs,marker='o')   
+        else: 
+            ax.scatter(self.h[0,:],self.w[0,:],marker='o')   
+            
+        plt.title('WSE vs width for first reach')
+        plt.xlabel('WSE, m')
+        plt.ylabel('Width, m')      
+        plt.show() 
