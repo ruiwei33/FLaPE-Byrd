@@ -8,6 +8,7 @@ Created on Wed Jan 13 23:49:40 2021
 from numpy import reshape,concatenate,zeros,ones,triu,empty,arctan,tan,pi
 from scipy import stats
 import matplotlib.pyplot as plt
+import copy
 
 class ReachObservations:    
         
@@ -51,23 +52,22 @@ class ReachObservations:
     
     def ConstrainHW(self):
         
-        self.hobs=self.h[0,:]
-        self.wobs=self.w[0,:]
+        # save a copy of 
+        self.hobs=copy.deepcopy(self.h[0,:])
+        self.wobs=copy.deepcopy(self.w[0,:])
         
-        self.fit = stats.linregress(self.hobs, self.wobs)
-        
+        self.fit = stats.linregress(self.hobs, self.wobs)        
 
         mo=-tan(pi/2-arctan(self.fit.slope));
         self.h[0,:]=(self.wobs-mo*self.hobs-self.fit.intercept)/(self.fit.slope-mo);
-        self.w[0,:]=self.fit.slope*self.h+self.fit.intercept;
-        
-        
+        self.w[0,:]=self.fit.slope*self.h+self.fit.intercept;                
         
     def plotHW(self):
         fig,ax = plt.subplots()
         
         if self.ConstrainHWSwitch:
             ax.scatter(self.hobs,self.wobs,marker='o')   
+            ax.scatter(self.h[0,:],self.w[0,:],marker='o')   
         else: 
             ax.scatter(self.h[0,:],self.w[0,:],marker='o')   
             
@@ -75,3 +75,22 @@ class ReachObservations:
         plt.xlabel('WSE, m')
         plt.ylabel('Width, m')      
         plt.show() 
+        
+    def plotdA(self):
+        fig,ax = plt.subplots()
+        ax.plot(self.D.t.T,self.dA[0,:])        
+            
+        plt.title('dA timeseries')
+        plt.xlabel('Time, days')
+        plt.ylabel('dA, m^2')      
+        plt.show()       
+        
+    def plotHdA(self):
+        fig,ax = plt.subplots()
+        
+        ax.scatter(self.h[0,:],self.dA[0,:],marker='o')   
+            
+        plt.title('dA vs WSE for first reach')
+        plt.xlabel('WSE, m')
+        plt.ylabel('dA, m')      
+        plt.show()         
