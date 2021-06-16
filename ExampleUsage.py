@@ -16,11 +16,17 @@ from FlowLaws import MWACN,MWAPN
 
 # Read in data and initialize data objects
 # IO=RiverIO('MetroManTxt',obsFname='PepsiSac/SWOTobs.txt',truthFname='PepsiSac/truth.txt')
-BaseDir='/Users/mtd/Box/Data/ArcticDEMHydro/reach_averages/sag_32/'
+BaseDir='/Users/mtd/OneDrive - The Ohio State University/Data/ArcticDEMHydro/reach_averages/gage22/'
 IO=RiverIO('MetroManTxt',obsFname=BaseDir+'SWOTobs.txt',truthFname=BaseDir+'truth.txt')
 D=Domain(IO.ObsData)
-Obs=ReachObservations(D,IO.ObsData)
+ConstrainHW_Switch=False
+Obs=ReachObservations(D,IO.ObsData,ConstrainHW_Switch)
 Truth=ReachTruth(IO.TruthData)
+
+# check out heights and widths, and dA
+Obs.plotHW()
+Obs.plotdA()
+Obs.plotHdA()
 
 # Calibration calculations
 Variants=['Constant-n', 'PowerLaw-n']

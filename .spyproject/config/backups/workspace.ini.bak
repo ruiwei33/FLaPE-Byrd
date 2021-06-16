@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['ExampleUsage.py', 'FlowLawCalibration.py', 'FlowLaws.py', 'ReachObservations.py']
+recent_files = ['ExampleUsage.py', 'FlowLaws.py', 'ReachObservations.py', 'FlowLawCalibration.py', '../MetroMan/RunExps.py', '../../Box/Analysis/SWOT/Discharge/MetroManExperiments/RunExps.py', '../MetroMan/CalcErrorStats.py', '../MetroMan/CalculateEstimates.py']
 
