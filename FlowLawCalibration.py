@@ -27,7 +27,7 @@ class FlowLawCalibration:
         
         # self.param_est=zeros( (self.D.nR,2) )
         self.success= zeros( 1, dtype=bool )
-        self.Qhat=zeros( (1,self.D.nt) )    
+        self.Qhat=zeros( (1,len(self.Qtrue)) )    
                    
         init_params=self.FlowLaw.GetInitParams()
         param_bounds=self.FlowLaw.GetParamBounds()         
