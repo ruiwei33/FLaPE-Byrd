@@ -61,6 +61,17 @@ class FlowLawCalibration:
         plt.ylabel('Discharge m^3/s')
         plt.legend()        
         plt.show()
+                
+    def PlotTimeseries2(self):
+        fig,ax = plt.subplots()
+        ax.plot(self.Qtrue,label='true')
+        ax.plot(self.Qhat,label='estimate')        
+        plt.title('Discharge timeseries')
+        plt.xlabel('Time,days')
+        plt.ylabel('Discharge m^3/s')
+        plt.legend()        
+        plt.show()
+        
     def PlotScatterplot(self):
         fig,ax = plt.subplots()
         ax.scatter(self.Qtrue,self.Qhat,marker='o')        
