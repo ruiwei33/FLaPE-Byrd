@@ -78,7 +78,7 @@ class MOMMA(FlowLaws):
     def CalcQ(self,params):
         nb=0.11*(params[2])**0.18
         n=nb*(1+log10( (params[1] - params[0])/(self.h - params[0]) ))
-        Q=1/n*((self.h - params[0])*(1/3))**(5/3)*self.W*self.S**(1/2)
+        Q=1/n*((self.h - params[0])*(2/3))**(5/3)*self.W*self.S**(1/2)
         return Q
     def GetInitParams(self):
         #etc
